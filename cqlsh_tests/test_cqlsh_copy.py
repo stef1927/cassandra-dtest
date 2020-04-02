@@ -1659,7 +1659,7 @@ class TestCqlshCopy(Tester):
         self.all_datatypes_prepare()
 
         insert_statement = self.session.prepare(
-            """INSERT INTO testdatatype (a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa)
+            """INSERT INTO testdatatype (a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, za)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""")
         self.session.execute(insert_statement, self.data)
 
@@ -1699,9 +1699,12 @@ class TestCqlshCopy(Tester):
             data_set = list(self.data)
 
             data_set[2] = self.format_blob(self.data[2])
-            data_set[24][3] = self.format_blob(self.data[24][3])
-            data_set[25] = [self.format_blob(el) for el in self.data[25]]
-            data_set[26] = {self.format_blob(el) for el in self.data[26]}
+            # Here we convert containers of blobs to strings that match exactly the output of the SELECT *
+            # because otherwise the comparison fails due to extra quotes added by the csv writer around the blobs
+            # that were converted to strings. White spaces do matter
+            data_set[24] = '{3: ' + _format_blob(self.data[24][3]) + '}'
+            data_set[25] = '[' + ', '.join(_format_blob(b) for b in self.data[25]) + ']'
+            data_set[26] = '{' + ', '.join(_format_blob(b) for b in self.data[26]) + '}'
             # logger.debug('{}'.format(data_set))
             writer.writerow(data_set)
 
@@ -1736,7 +1739,7 @@ class TestCqlshCopy(Tester):
         self.all_datatypes_prepare()
 
         insert_statement = self.session.prepare(
-            """INSERT INTO testdatatype (a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, aa)
+            """INSERT INTO testdatatype (a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p, q, r, s, t, u, v, w, x, y, z, za)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)""")
         self.session.execute(insert_statement, self.data)
 
