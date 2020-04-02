@@ -263,7 +263,7 @@ class TestCqlshCopy(Tester):
                 x map<text, frozen<list<text>>>,
                 y map<int, blob>,
                 z list<blob>,
-                aa set<blob>
+                za set<blob>
             )''')
 
         self.session.cluster.register_user_type('ks', 'name_type', Name)
@@ -308,7 +308,7 @@ class TestCqlshCopy(Tester):
                      {'key1': ['value1', 'value2']},  # map<text, frozen<list<text>>>
                      {3: bytes.fromhex('74776f')},  # y
                      [bytes.fromhex('74776f')],  # z
-                     {bytes.fromhex('74776f')}  # aa
+                     {bytes.fromhex('74776f')}  # za
                      )
 
     def assertCsvResultEqual(self, csv_filename, results, table_name=None,
@@ -1702,6 +1702,7 @@ class TestCqlshCopy(Tester):
             data_set[24][3] = self.format_blob(self.data[24][3])
             data_set[25] = [self.format_blob(el) for el in self.data[25]]
             data_set[26] = {self.format_blob(el) for el in self.data[26]}
+            # logger.debug('{}'.format(data_set))
             writer.writerow(data_set)
 
         def _test(prepared_statements):
