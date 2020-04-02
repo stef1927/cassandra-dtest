@@ -1697,12 +1697,12 @@ class TestCqlshCopy(Tester):
             writer = csv.writer(csvfile)
             # serializing blob bytearray in friendly format
             data_set = list(self.data)
-            data_set[2] = self.format_blob(self.data[2])
-            data_set[25][3] =  self.format_blob(self.data[25][3])
-            data_set[26] = [self.format_blob(el) for el in self.data[26]]
-            data_set[27] = {self.format_blob(el) for el in self.data[27]}
-            writer.writerow(data_set)
 
+            data_set[2] = self.format_blob(self.data[2])
+            data_set[24][3] = self.format_blob(self.data[24][3])
+            data_set[25] = [self.format_blob(el) for el in self.data[25]]
+            data_set[26] = {self.format_blob(el) for el in self.data[26]}
+            writer.writerow(data_set)
 
         def _test(prepared_statements):
             logger.debug('Importing from csv file: {name}'.format(name=tempfile.name))
